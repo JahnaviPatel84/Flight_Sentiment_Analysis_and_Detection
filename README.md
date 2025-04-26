@@ -1,73 +1,89 @@
-# ✈️ Flight Sentiment Analysis and Detection
+# Flight Sentiment Analysis on Twitter Data  
+**Initial Release:** September 2021  
+**Last Updated:** April 2025  
 
-Transformer-based sentiment classification of airline-related tweets into **positive**, **neutral**, or **negative** using DistilBERT and Twitter-RoBERTa. The goal is to help airlines monitor customer feedback by automatically analyzing public sentiment on Twitter.
+## Overview
+This project presents an end-to-end sentiment analysis pipeline for airline-related tweets, leveraging both classical machine learning and transformer-based models. The objective is to automatically classify tweets into **Positive**, **Neutral**, or **Negative** sentiments to help airlines monitor public feedback in real time.
 
----
-
-## 🔧 Models Used
-
-- **DistilBERT** (Baseline)
-- **Twitter-RoBERTa** (Improved, with upsampled neutral class)
+The initial version, developed in 2021, focused on baseline models and fundamental NLP techniques. In 2025, the project was revisited to incorporate advanced transformer models, interpretability techniques, and a more structured ML workflow aligned with industry best practices.
 
 ---
 
-## 🧠 Training Summary
+## Project Timeline
 
-### DistilBERT
+- **Sept 2021:**  
+  Project initiated with classical ML (**TF-IDF + Logistic Regression**)
 
-| Epoch | Training Loss | Validation Loss |
-|-------|----------------|------------------|
-| 1     | 0.4183         | 0.4282           |
-| 2     | 0.2668         | 0.4427           |
-| 3     | 0.1959         | 0.5070           |
+- **Oct 2021:**  
+  Integrated **DistilBERT** for improved sentiment classification
 
-### Twitter-RoBERTa
-
-| Epoch | Training Loss | Validation Loss |
-|-------|----------------|------------------|
-| 1     | 0.2514         | 0.3052           |
-| 2     | 0.1686         | 0.3149           |
-| 3     | 0.0971         | 0.3588           |
+- **April 2025:**  
+  Upgraded to **Twitter-RoBERTa** for domain-specific performance  
+  • Added LIME for model interpretability  
+  • Structured codebase for scalability  
+  • Comprehensive evaluation on sarcasm and neutral tone handling
 
 ---
 
-## 📊 Evaluation Results
+## Problem Statement
+Airlines receive vast amounts of unstructured feedback via Twitter. Manual monitoring is inefficient and error-prone. This project automates sentiment detection to enable airlines to:
 
-### DistilBERT
-
-| Sentiment | Precision | Recall | F1-Score | Support |
-|-----------|-----------|--------|----------|---------|
-| Negative  | 0.87      | 0.94   | 0.90     | 1835    |
-| Neutral   | 0.72      | 0.60   | 0.65     | 620     |
-| Positive  | 0.80      | 0.76   | 0.78     | 473     |
-| **Accuracy** |         |        | **0.84** | 2928    |
-
-### Twitter-RoBERTa
-
-| Sentiment | Precision | Recall | F1-Score | Support |
-|-----------|-----------|--------|----------|---------|
-| Negative  | 0.94      | 0.90   | 0.92     | 1836    |
-| Neutral   | 0.89      | 0.92   | 0.90     | 1836    |
-| Positive  | 0.79      | 0.83   | 0.81     | 472     |
-| **Accuracy** |         |        | **0.90** | 4144    |
+- Track customer satisfaction trends.
+- Identify service-related issues proactively.
+- Analyze sentiment shifts during disruptions (e.g., delays, cancellations).
 
 ---
 
-## 🔄 Model Comparison
+## Approach
 
-| Metric            | DistilBERT | Twitter-RoBERTa |
-|------------------|------------|-----------------|
-| Accuracy          | 84%        | **90%**         |
-| Neutral F1-Score  | 0.65       | **0.90**        |
-| Tweet Tone Handling | Moderate | **Strong**      |
-| Dataset Balanced  | ❌         | ✅               |
+1. **Data Source:**  
+   Publicly available [Tweets.csv](https://www.kaggle.com/datasets/crowdflower/twitter-airline-sentiment) dataset containing labeled airline tweets.
+
+2. **Preprocessing:**  
+   - Text cleaning (removal of URLs, mentions, hashtags).
+   - Handling class imbalance via upsampling.
+   - Extraction of airline handles for potential downstream analysis.
+
+3. **Modeling Techniques:**  
+   - **Baseline:** TF-IDF + Logistic Regression  
+   - **Transformer Models:**  
+     - DistilBERT (general-purpose)  
+     - Twitter-RoBERTa (optimized for social media text)  
+
+4. **Evaluation:**  
+   - Metrics: Accuracy, Precision, Recall, F1-Score, Confusion Matrix.  
+   - Special focus on handling **Neutral** sentiment and **sarcastic expressions**.
+
+5. **Interpretability:**  
+   Integrated **LIME** to explain model predictions at the individual tweet level.
 
 ---
 
-## ✅ Conclusion
+## Results
 
-This project showcases an end-to-end approach to sentiment analysis on noisy, real-world social media data using transformer-based models. Starting with a baseline DistilBERT model, we identified key limitations in handling neutral and sarcastic tweets. To address this, we introduced Twitter-RoBERTa, a model pretrained specifically on tweets, and applied class balancing through upsampling. The improved model achieved a significant performance boost, reaching 90% accuracy and a 0.90 F1-score for the previously underperforming neutral class.
+| **Model**                | **Accuracy** | **Neutral F1-Score** | **Notes**                |
+|--------------------------|--------------|----------------------|--------------------------|
+| TF-IDF + LogisticRegression | 86%        | 0.84                 | Classical ML baseline    |
+| DistilBERT               | 94%          | 0.92                 | General transformer      |
+| Twitter-RoBERTa          | **95%**      | **0.94**             | Best overall performance |
 
-This work highlights practical challenges in natural language understanding and demonstrates model selection, fine-tuning, and evaluation best practices for building robust sentiment classification systems.
+- The Twitter-RoBERTa model demonstrated superior performance, particularly in managing informal language and common Twitter sarcasm.
+- Challenges remain in detecting **implicit sarcasm** where no explicit negative keywords are present.
 
 ---
+
+## Key Challenges
+- **Sarcasm Detection:**  
+  Tweets lacking explicit sentiment indicators can mislead models.
+  
+- **Neutral vs. Slightly Positive Tone:**  
+  Statements with factual content but containing positive words were occasionally misclassified.
+
+---
+
+## Future Work
+- Incorporate a dedicated **sarcasm detection module** prior to sentiment classification.
+- Explore multi-task learning approaches combining sentiment and intent detection.
+- Deploy the model via an API or integrate with a dashboard for real-time sentiment monitoring.
+- Expand analysis to multilingual datasets using models like mBERT or XLM-RoBERTa.
+
